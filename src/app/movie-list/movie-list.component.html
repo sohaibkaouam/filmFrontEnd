@@ -1,0 +1,136 @@
+<div class="card">
+    <div class="my-4 text-left">
+      <button type="button" class="btn btn-primary" (click)="openModal(content)">add new movie</button>
+    </div>
+
+  <div style="padding-bottom: 10px; padding-top: 15px">
+    <form (ngSubmit)="searchMovie(f)" #f="ngForm" class="row row-cols-lg-auto g-3 align-items-center">
+
+      <div class="col-12" style="width: 7%">
+
+        <input type="text"
+               class="form-control form-control-sm"
+               placeholder="Primary Title" name="primaryTitle" ngModel />
+      </div>
+
+      <div class="col-12" style="width: 7%">
+
+        <input type="text"
+               class="form-control form-control-sm"
+               placeholder="Original Title" name="originalTitle" ngModel/>
+      </div>
+
+      <div class="col-12">
+
+        <input type="text"
+               class="form-control form-control-sm"
+               placeholder="Start Year" name="startYear" ngModel/>
+      </div>
+
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary w-xs btn-sm">Search</button>
+      </div>
+    </form>
+
+  </div>
+
+  <p-table
+    [value]="movies"
+    dataKey="id"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [tableStyle]="{ 'min-width': '75rem' }"
+    [paginator]="true"
+    [rows]="10"
+    [totalRecords]="totalRecords"
+    [globalFilterFields]="['titleType', 'primaryTitle', 'originalTitle', 'years','endYear','genres']"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="titleType">Title type <p-sortIcon field="titleType"></p-sortIcon></th>
+        <th pSortableColumn="primaryTitle">Primary title <p-sortIcon field="primaryTitle"></p-sortIcon></th>
+        <th pSortableColumn="originalTitle">original title <p-sortIcon field="originalTitle"></p-sortIcon></th>
+        <th pSortableColumn="startYear">Start year <p-sortIcon field="startYear"></p-sortIcon></th>
+        <th pSortableColumn="genres">Genres<p-sortIcon field="genres"></p-sortIcon></th>
+      </tr>
+      <tr>
+        <th>
+          <p-columnFilter type="text" field="titleType"></p-columnFilter>
+        </th>
+        <th>
+          <p-columnFilter type="text" field="primaryTitle"></p-columnFilter>
+        </th>
+        <th>
+          <p-columnFilter type="text" field="originalTitle"></p-columnFilter>
+        </th>
+        <th>
+          <p-columnFilter field="startYear" matchMode="in" [showMenu]="false">
+            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+              <p-multiSelect [ngModel]="value" [options]="years" placeholder="Any" (onChange)="filter($event.value)" optionLabel="">
+                <ng-template let-option pTemplate="item">
+                  <div class="inline-block vertical-align-middle">
+                    <span class="ml-1 mt-1">{{ option }}</span>
+                  </div>
+                </ng-template>
+              </p-multiSelect>
+            </ng-template>
+          </p-columnFilter>
+        </th>
+        <th>
+          <p-columnFilter type="text" field="genres"></p-columnFilter>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-movie>
+      <tr>
+        <td>{{ movie.titleType }}</td>
+        <td>{{ movie.primaryTitle }}</td>
+        <td>{{ movie.originalTitle }}</td>
+        <td>{{ movie.startYear }}</td>
+        <td>{{ movie.endYear }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<!-- Standard Modal -->
+<ng-template #content role="document" let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title mt-0">Add movie</h5>
+    <button type="button" class="btn-close" aria-hidden="true" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="card">
+    <div class="row">
+      <div class="col-lg-6">
+        <div>
+          <label class="form-label">Primary  Title</label>
+          <input class="form-control" type="text" [(ngModel)]="originalTitle">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6">
+        <div>
+          <label class="form-label">Original Title</label>
+          <input class="form-control" type="text" [(ngModel)]="primaryTitle">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-6">
+        <div>
+          <label class="form-label">Start Year</label>
+          <input class="form-control" type="text" [(ngModel)]="startYear">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+    <button type="button" class="btn btn-primary" (click)="addMovie()">Save changes</button>
+  </div>
+</ng-template>
+
+
